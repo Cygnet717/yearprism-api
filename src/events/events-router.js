@@ -61,6 +61,13 @@ eventsRouter
         })
         .catch(error => console.log(error.message))
         })
+    .delete(jsonBodyParser, (req, res, next) => {
+        const {eventid} = req.body;
+
+        eventsService.deleteEvent(req.app.get('db'), eventid)
+        .then(event => res.status(204).json({error: {message: 'deleted'}}))
+        .catch(next)
+    })
 
 module.exports = eventsRouter;
     

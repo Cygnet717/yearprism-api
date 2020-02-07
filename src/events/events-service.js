@@ -40,9 +40,9 @@ const eventsService = {
         .returning('*')
     },
 
-    deleteEvent(db, eventId){
+    deleteEvent(db, id){
         return db('yp_events')
-        .where({eventId})
+        .where({'eventid': id})
         .delete()
     }
 }
