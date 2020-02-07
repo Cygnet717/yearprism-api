@@ -52,8 +52,25 @@ function seedUsers (db, users) {
         ...user,
         password: bcrypt.hashSync(user.password, 1)
     }))
-    return db.into('YP_users').insert(preppedUsers)
+    return db.into('yp_users').insert(preppedUsers)
 }
+
+function checkUsers (db){
+    return db
+    .select('*')
+    .from('yp_users')
+}
+
+function makeAuthHeader(user, secret = process.env.JWT_SECRET) {
+        
+    const user_id = user.user_id
+    const token = jwt.sign({ user_id: user_id }, secret, {
+      subject: user.username,
+      expiresIn:'3h',
+      algorithm: 'HS256'
+    })
+    return `Bearer ${token}`
+  }
 
 module.exports = {
     makeUsersArray,
@@ -61,5 +78,6 @@ module.exports = {
     makeTestUserFixtures,
     cleanTables,
     seedUsers,
-
+    makeAuthHeader,
+    checkUsers
 }

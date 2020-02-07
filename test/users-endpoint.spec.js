@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const app = require('../src/app');
 const helpers = require('./test-helpers');
 
-describe('Users Endpoints', function() {
+describe.only('Users Endpoints', function() {
     let db 
 
     const testUsers = helpers.makeTestUserFixtures();
@@ -16,28 +16,29 @@ describe('Users Endpoints', function() {
           })
           app.set('db', db)
     })
-
-    after('disconnect from db', () => db.destroy())
-    before('cleanup', () => helpers.cleanTables(db))
-    afterEach('cleanup', () => helpers.cleanTables(db))
+    helpers.seedUsers(db, testUsers.usersArray)
+    //after('disconnect from db', () => db.destroy())
+    //before('cleanup', () => helpers.cleanTables(db))
+    //afterEach('cleanup', () => helpers.cleanTables(db))
 
     describe(`POST /api/users`, () => {
-        beforeEach('insert users', () => {
-            helpers.seedUsers(db, testUsers.usersArray)
-        })
+        //beforeEach('insert users', () => {
+        //    helpers.seedUsers(db, testUsers.usersArray)
+        //})
 
         const happyUser = {
             "username": "HappyUser",
-            "birthyear": "1986",
+            "birthyear": 1986,
             "password": "Password!1"
         }
 
-        it(`Happy path`, () => {
+        it(`Happy path successfully adds new user`, () => {
             return supertest(app).post('/api/users').send(happyUser)
             .expect(201,
                 {
                     "user_id": 1,
-                    "username": "HappyUser"
+                    "birthyear": happyUser.birthyear,
+                    "username": happyUser.username
                 }
                 )
         })
