@@ -33,15 +33,15 @@ function makeEventsArray(users) {
 }
 
 function makeTestUserFixtures() {
-    const testusers = makeUsersArray()
-    const testEvents = makeEventsArray(testusers)
-    return {testusers, testEvents}
+    const usersArray = makeUsersArray()
+    const eventsArray = makeEventsArray(usersArray)
+    return {usersArray, eventsArray}
 }
 
 function cleanTables(db) {
     return db.raw(
         `TRUNCATE
-        yp_users,
+        YP_users,
         yp_events
         RESTART IDENTITY CASCADE`
     )
@@ -52,7 +52,7 @@ function seedUsers (db, users) {
         ...user,
         password: bcrypt.hashSync(user.password, 1)
     }))
-    return db.into('yp_users').insert(preppedUsers)
+    return db.into('YP_users').insert(preppedUsers)
 }
 
 module.exports = {
