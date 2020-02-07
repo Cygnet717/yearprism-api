@@ -6,6 +6,7 @@ const helmet = require('helmet');
 const {NODE_ENV} = require('./config');
 const usersRouter = require('./users/users-router');
 const loginRouter = require('./loginUser/loginUser-router');
+const eventsRouter = require('./events/events-router')
 
 const app = express();
 
@@ -22,8 +23,9 @@ app.get('/', (req,res)=>{
     
 });
 
-app.use('/api/login', loginRouter)
+app.use('/api/login', loginRouter);
 app.use('/api/users', usersRouter);
+app.use('/api/events', eventsRouter);
 
 app.use(function errorHandler(error, req, res, next){
     let response
