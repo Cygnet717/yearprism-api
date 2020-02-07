@@ -25,13 +25,19 @@ const eventsService = {
     },
 
     serializeEvent(newEvent){
-        
         return {
             eventdate: newEvent.eventDate,
             eventname: xss(newEvent.eventName),
             category: newEvent.category,
             notes: xss(newEvent.notes)
         }
+    },
+
+    updateEvent(db, editedEvent, id){
+        return db('yp_events')
+        .where({eventid: id})
+        .update(editedEvent)
+        .returning('*')
     },
 
     deleteEvent(db, eventId){
