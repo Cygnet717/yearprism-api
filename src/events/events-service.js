@@ -2,6 +2,7 @@ const xss = require('xss')
 
 const eventsService = {
     getAllEvents(db, id){
+        
         return db
         .select('*')
         .from('yp_events')

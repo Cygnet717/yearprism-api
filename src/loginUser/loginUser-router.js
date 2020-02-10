@@ -21,7 +21,7 @@ loginRouter
       .then(dbUser => {
           if(!dbUser){
           return res.status(400).json({
-              error: 'Incorrect user_name or password'
+              error: 'Incorrect User_name or password'
           })}
 
           return LoginUserService.comparePasswords(loginUser.password, dbUser.password)
@@ -29,7 +29,7 @@ loginRouter
           .then(compareMatch => {
               if(!compareMatch)
               return res.status(400).json({
-                  error: 'Incorrect user_name or password',
+                  error: 'Incorrect user_name or Password',
               })
 
               

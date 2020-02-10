@@ -22,10 +22,10 @@ function makeUsersArray() {
 function makeEventsArray(users) {
     return [
         {
-            eventId: 1,
+            eventid: 1,
             user_id: users[0].user_id,
-            eventDate: "2020-02-02",
-            eventName: "test Event",
+            eventdate: "2020-02-02",
+            eventname: "test Event",
             category: "Achievements",
             notes: "test Notes"
         }

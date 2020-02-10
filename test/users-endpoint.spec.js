@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const app = require('../src/app');
 const helpers = require('./test-helpers');
 
-describe.only('Users Endpoints', function() {
+describe('Users Endpoints', function() {
     let db 
 
     const testUsers = helpers.makeTestUserFixtures();
@@ -16,16 +16,16 @@ describe.only('Users Endpoints', function() {
           })
           app.set('db', db)
     })
-    helpers.seedUsers(db, testUsers.usersArray)
-    //after('disconnect from db', () => db.destroy())
-    //before('cleanup', () => helpers.cleanTables(db))
-    //afterEach('cleanup', () => helpers.cleanTables(db))
+    
+    after('disconnect from db', () => db.destroy())
+    before('cleanup', () => helpers.cleanTables(db))
+    afterEach('cleanup', () => helpers.cleanTables(db))
 
     describe(`POST /api/users`, () => {
-        //beforeEach('insert users', () => {
-        //    helpers.seedUsers(db, testUsers.usersArray)
-        //})
-
+        beforeEach('insert users', () => {
+            helpers.seedUsers(db, testUsers.usersArray)
+        })
+        
         const happyUser = {
             "username": "HappyUser",
             "birthyear": 1986,
@@ -41,6 +41,12 @@ describe.only('Users Endpoints', function() {
                     "username": happyUser.username
                 }
                 )
+        })
+
+        it('responds with user info', () => {
+            return supertest(app)
+            .get('/api/users')
+            .expect(200)
         })
     })
 })

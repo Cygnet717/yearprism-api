@@ -45,6 +45,12 @@ const UsersService = {
             username: xss(user.username),
         }
     },
+
+    getUsers(db){
+        return db
+        .select('*')
+        .from('yp_events')
+    }
 }
 
 module.exports = UsersService

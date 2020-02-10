@@ -2,8 +2,10 @@ const knex = require('knex');
 const jwt = require('jsonwebtoken');
 const app = require('../src/app');
 const helpers = require('./test-helpers');
+const bcrypt = require('bcryptjs');
+const config = require('../src/config');
 
-describe('Login Endpoints', function() {
+describe.only('Login Endpoints', function() {
     let db 
 
     const testUsers = helpers.makeTestUserFixtures();
@@ -24,38 +26,39 @@ describe('Login Endpoints', function() {
 
     describe(`POST /api/login`, () => {
         beforeEach('insert users', () => {
-            helpers.seedUsers(db, testUsers.usersArray)
+            const preppedUsers = testUsers.usersArray.map(user => ({
+                ...user,
+                password: bcrypt.hashSync(user.password, 1)
+            }))
+            return db.into('yp_users').insert(preppedUsers)
         })
 
-            const loginAttemptBody = {
-                username: SampleTestUser.username,
-                password: SampleTestUser.password
-            }
+        const loginAttemptBody = {
+            username: SampleTestUser.username,
+            password: SampleTestUser.password
+        }
             
+        it('test function for working database', () => {
+            helpers.checkUsers(db)
+            .then(user => console.log(user))
+        })
         
-        it.skip(`Happy path`, () => {
+        it(`Happy path`, () => {
             const expectedToken = jwt.sign(
                 {user_id: SampleTestUser.user_id}, 
                 process.env.JWT_SECRET,
                 {
                     subject: SampleTestUser.username,
-                    expiresIn:'3h',
+                    expiresIn: config.JWT_EXPIRY,
                     algorithm: 'HS256',
                 }
             )
+            
 
             return supertest(app)
             .post('/api/login')
             .send(loginAttemptBody)
-            .expect(400,
-                {
-                    authToken: expectedToken,
-                    payload: {
-                        user_id: SampleTestUser.user_id,
-                        
-                    }
-                }
-                )
+            .expect(200, {"authToken":expectedToken, payload: {user_id: SampleTestUser.user_id}})
         })
     })
 })

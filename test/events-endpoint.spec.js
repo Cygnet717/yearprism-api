@@ -23,18 +23,37 @@ describe('Events Endpoints', function () {
 
     describe('GET /api/events', () => {
         beforeEach('insert users', () => {
-            helpers.seedUsers(db, testUsers.usersArray)
+            return db.into('yp_users').insert(testUsers.usersArray)
         }) 
+
+        beforeEach('insert events', () => {
+            return db.into('yp_events').insert(testUsers.eventsArray)
+        })
+
+        it('responds with user info', () => {
+            let resEventArray = [{ eventid: 1,
+                user_id: 1,
+                eventdate: '2020-02-02T06:00:00.000Z',
+                eventname: 'test Event',
+                category: 'Achievements',
+                notes: 'test Notes' }]
+            return supertest(app)
+            .get('/api/users')
+            .expect(200, resEventArray )
+        })
+
+
  
-        //helpers.checkUsers(db)
-        //.then(i => console.log(i))
+
         const authorizedUserToken = helpers.makeAuthHeader(oneTestUser)
 
         it('should get array of all events and status 200', () => {
+            
             return supertest(app)
-            .get('/api/events')
+            .get(`/api/events`)
+            .send(oneTestUser)
             .set('Authorization', authorizedUserToken)
-            .expect(401, {error: 'mesage error'})
+            .expect(200)
         })
 
         it('should return 401 unauthorized', () => {

@@ -9,9 +9,9 @@ const jsonBodyParser = express.json();
 eventsRouter
     .route('/')
     .all(requireAuth)
-    .get((req, res, next) => {
-        const user_id = req.user.user_id
-
+    .get(jsonBodyParser, (req, res, next) => {
+        const user_id = req.body.user_id
+        console.log(req.body)
         eventsService.getAllEvents(req.app.get('db'), user_id)
         .then(events => {
             res.json(events)
@@ -22,6 +22,15 @@ eventsRouter
         const {user_id, eventdate, eventname, category} = req.body;
         const {notes} = req.body;
         const newEvent = {user_id, eventdate, eventname, category};
+
+        const types = ['Achievements', 'Body Modification', 'Family', 'Home', 'Job', 'Medical', 'Pets', 'Relationship', 'School', 'Vacation', 'Other']
+
+        
+        if(!types.find(i => i === newEvent.category)){
+            return res.status(400).json({
+                error: `Missing valid category`
+            })
+        }
 
         for(const [key, value] of Object.entries(newEvent))
         if(value == null)
