@@ -2,7 +2,6 @@ const xss = require('xss')
 
 const eventsService = {
     getAllEvents(db, id){
-        
         return db
         .select('*')
         .from('yp_events')
@@ -11,10 +10,10 @@ const eventsService = {
 
     getAllYearEvents(db, id, year){
         return db
-        .select('*')
-        .from('yp_events')
-        .where('user_id', id)
-        .and(`date_trunc('year', eventdate)=${year}-01-01 00:00:00+00`)
+        .raw(`select * from yp_events
+        where user_id=${id}
+        and date_trunc('year', eventdate) ='${year}-01-01 00:00:00+00'`)
+        
     },
 
     insertEvent(db, newEvent){

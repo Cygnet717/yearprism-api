@@ -49,10 +49,19 @@ eventsRouter
         })
     })
     .patch(jsonBodyParser, (req, res, next) => {
-        const {eventId} = req.body;
+        const eventId = req.body.eventId;
         const {user_id, eventdate, eventname, category} = req.body;
         const {notes} = req.body;
         const editedEvent = {user_id, eventdate, eventname, category};
+
+        const types = ['Achievements', 'Body Modification', 'Family', 'Home', 'Job', 'Medical', 'Pets', 'Relationship', 'School', 'Vacation', 'Other']
+
+        
+        if(!types.find(i => i === editedEvent.category)){
+            return res.status(400).json({
+                error: `Missing valid category`
+            })
+        }
 
         for(const [key, value] of Object.entries(editedEvent))
         if(value == null)
@@ -61,9 +70,10 @@ eventsRouter
         })
         
         editedEvent.notes = notes;
-       
-        eventsService.serializeEvent(editedEvent)
         
+
+        eventsService.serializeEvent(editedEvent)
+
         eventsService.updateEvent(req.app.get('db'), editedEvent, eventId)
         .then(edited => {
             res.status(200).json(edited)
@@ -75,6 +85,20 @@ eventsRouter
 
         eventsService.deleteEvent(req.app.get('db'), eventid)
         .then(event => res.status(204).json({error: {message: 'deleted'}}))
+        .catch(next)
+    })
+
+eventsRouter
+    .route('/:year')
+    .all(requireAuth)
+    .get(jsonBodyParser, (req, res, next) => {
+        const user_id = req.body.user_id;
+        const year = req.params.year;
+        console.log(req.body)
+        eventsService.getAllYearEvents(req.app.get('db'), user_id, year)
+        .then(events => {
+            res.json(events)
+        })
         .catch(next)
     })
 
