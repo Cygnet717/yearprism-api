@@ -9,9 +9,8 @@ const jsonBodyParser = express.json();
 eventsRouter
     .route('/')
     .all(requireAuth)
-    .get(jsonBodyParser, (req, res, next) => {
-        const user_id = req.body.user_id
-        console.log(req.body)
+    .get((req, res, next) => {
+        const user_id = req.user.user_id
         eventsService.getAllEvents(req.app.get('db'), user_id)
         .then(events => {
             res.json(events)
@@ -91,10 +90,10 @@ eventsRouter
 eventsRouter
     .route('/:year')
     .all(requireAuth)
-    .get(jsonBodyParser, (req, res, next) => {
-        const user_id = req.body.user_id;
+    .get((req, res, next) => {
+        const user_id = req.user.user_id;
         const year = req.params.year;
-        console.log(req.body)
+        
         eventsService.getAllYearEvents(req.app.get('db'), user_id, year)
         .then(events => {
             res.json(events)
