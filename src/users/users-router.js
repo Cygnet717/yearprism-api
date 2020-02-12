@@ -39,9 +39,16 @@ usersRouter
 
                 return UsersService.insertUser(req.app.get('db'), newUser)
                 .then(user => {
+                    const cleanuser =UsersService.serializeUser(user)
+                    const payload = { user_id: cleanuser.user_id }
                     res.status(201)
                     .location(path.posix.join(req.originalUrl, `./${user.user_id}`))
-                    .json(UsersService.serializeUser(user))
+                    .json({
+                        authToken: UsersService.createJwt(cleanuser.username, payload),
+                        user: {username: cleanuser.username,
+                              user_id: cleanuser.user_id,
+                              birthyear: cleanuser.birthyear}
+                    })
                 })
             })
         })
