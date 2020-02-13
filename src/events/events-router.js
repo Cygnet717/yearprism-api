@@ -23,8 +23,7 @@ eventsRouter
         const newEvent = {user_id, eventdate, eventname, category};
 
         const types = ['Achievements', 'Body Modification', 'Family', 'Home', 'Job', 'Medical', 'Pets', 'Relationship', 'School', 'Vacation', 'Other']
-
-        
+   
         if(!types.find(i => i === newEvent.category)){
             return res.status(400).json({
                 error: `Missing valid category`
@@ -52,7 +51,7 @@ eventsRouter
         const user_id = req.user
         const {eventdate, eventname, category} = req.body;
         const {notes} = req.body;
-        const editedEvent = {user_id, eventdate, eventname, category};
+        const editedEvent = {eventdate, eventname, category};
 
         const types = ['Achievements', 'Body Modification', 'Family', 'Home', 'Job', 'Medical', 'Pets', 'Relationship', 'School', 'Vacation', 'Other']
 
@@ -70,6 +69,7 @@ eventsRouter
         })
         
         editedEvent.notes = notes;
+        editedEvent.user_id = user_id;
         
 
         eventsService.serializeEvent(editedEvent)
