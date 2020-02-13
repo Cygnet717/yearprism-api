@@ -48,7 +48,7 @@ eventsRouter
     })
     .patch(jsonBodyParser, (req, res, next) => {
         const eventId = req.body.eventid;
-        const user_id = req.user
+        const user_id = req.user.user_id;
         const {eventdate, eventname, category} = req.body;
         const {notes} = req.body;
         const editedEvent = {eventdate, eventname, category};
