@@ -62,6 +62,12 @@ const UsersService = {
         return db
         .select('*')
         .from('yp_events')
+    },
+
+    deleteUser(db, id){
+        return db('yp_users')
+        .where({'user_id': id})
+        .delete()
     }
 }
 

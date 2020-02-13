@@ -48,8 +48,9 @@ eventsRouter
         })
     })
     .patch(jsonBodyParser, (req, res, next) => {
-        const eventId = req.body.eventId;
-        const {user_id, eventdate, eventname, category} = req.body;
+        const eventId = req.body.eventid;
+        const user_id = req.user
+        const {eventdate, eventname, category} = req.body;
         const {notes} = req.body;
         const editedEvent = {user_id, eventdate, eventname, category};
 
@@ -82,8 +83,13 @@ eventsRouter
     .delete(jsonBodyParser, (req, res, next) => {
         const {eventid} = req.body;
 
+        if(!eventid)
+        return res.send(400).json({
+            error: 'Missing event Id'
+        })
+
         eventsService.deleteEvent(req.app.get('db'), eventid)
-        .then(event => res.status(204).json({error: {message: 'deleted'}}))
+        .then(event => res.status(204))
         .catch(next)
     })
 
