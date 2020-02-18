@@ -54,8 +54,8 @@ usersRouter
         })
         .catch(next)
     })
-    .delete('/', jsonBodyParser, (req, res, next) => {
-        const {user_id} = req.body;
+    .delete('/:id', jsonBodyParser, (req, res, next) => {
+        const user_id = req.params.id;
         
         UsersService.deleteUser(req.app.get('db'), user_id)
         .then(event => {
