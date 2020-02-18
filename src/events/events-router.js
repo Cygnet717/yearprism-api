@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const eventsService = require('./events-service');
+const cloudinary = require('cloudinary').v2;
 const { requireAuth } = require('../middleware/jwt-auth');
 
 const eventsRouter = express.Router();
@@ -21,7 +22,7 @@ eventsRouter
         const {user_id, eventdate, eventname, category} = req.body;
         const {notes} = req.body;
         const newEvent = {user_id, eventdate, eventname, category};
-
+        
         const types = ['Achievements', 'Body Modification', 'Family', 'Home', 'Job', 'Medical', 'Pets', 'Relationship', 'School', 'Vacation', 'Other']
    
         if(!types.find(i => i === newEvent.category)){
@@ -37,7 +38,9 @@ eventsRouter
         })
         
         newEvent.notes = notes;
-       
+        setImageIdName=(id)=>{
+            newEvent.imagePubId = id
+        }
         eventsService.serializeEvent(newEvent)
 
         eventsService.insertEvent(req.app.get('db'), newEvent)
@@ -80,16 +83,18 @@ eventsRouter
         })
         .catch(error => console.log(error.message))
         })
-    .delete(jsonBodyParser, (req, res, next) => {
-        const {eventid} = req.body;
+
+eventsRouter
+    .route('/:id')
+    .all(requireAuth)
+    .delete((req, res, next) => {
+        const eventid = req.params.id;
 
         if(!eventid)
-        return res.send(400).json({
-            error: 'Missing event Id'
-        })
+        return res.status(400).send('missing eventid')
 
         eventsService.deleteEvent(req.app.get('db'), eventid)
-        .then(event => res.status(204))
+        .then(event => res.send(204))
         .catch(next)
     })
 
@@ -108,4 +113,3 @@ eventsRouter
     })
 
 module.exports = eventsRouter;
-    

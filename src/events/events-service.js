@@ -42,8 +42,8 @@ const eventsService = {
 
     deleteEvent(db, id){
         return db('yp_events')
-        .where({'eventid': id})
-        .delete()
+        .where({eventid: id})
+        .del()
     }
 }
 

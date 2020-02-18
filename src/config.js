@@ -4,5 +4,7 @@ module.exports = {
     DATABASE_URL: process.env.DATABASE_URL || 'postgresql://katge@localhost/yearprism',
     JWT_EXPIRY: process.env.JWT_EXPIRY || "24h",
     JWT_SECRET: process.env.JWT_SECRET || 'my-own-special-jwt-secret',
-    CLOUDINARY_URL: process.env.CLOUDINARY_URL
+
+    CLOUDINARY_URL: process.env.CLOUDINARY_URL,
+    CLOUDINARY_NAME: process.env.cloud_name,
 }
