@@ -107,7 +107,7 @@ eventsRouter
         
         eventsService.getAllYearEvents(req.app.get('db'), user_id, year)
         .then(events => {
-            res.json(events)
+            res.json(events.rows)
         })
         .catch(next)
     })

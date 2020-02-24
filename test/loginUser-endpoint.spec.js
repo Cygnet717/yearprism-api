@@ -5,7 +5,7 @@ const helpers = require('./test-helpers');
 const bcrypt = require('bcryptjs');
 const config = require('../src/config');
 
-describe.only('Login Endpoints', function() {
+describe('Login Endpoints', function() {
     let db 
 
     const testUsers = helpers.makeTestUserFixtures();
@@ -37,16 +37,11 @@ describe.only('Login Endpoints', function() {
             username: SampleTestUser.username,
             password: SampleTestUser.password
         }
-            
-        it('test function for working database', () => {
-            helpers.checkUsers(db)
-            .then(user => console.log(user))
-        })
         
-        it(`Happy path`, () => {
+        it(`Happy path logs in user`, () => {
             const expectedToken = jwt.sign(
                 {user_id: SampleTestUser.user_id}, 
-                process.env.JWT_SECRET,
+                config.JWT_SECRET,
                 {
                     subject: SampleTestUser.username,
                     expiresIn: config.JWT_EXPIRY,
@@ -54,11 +49,14 @@ describe.only('Login Endpoints', function() {
                 }
             )
             
-
             return supertest(app)
             .post('/api/login')
             .send(loginAttemptBody)
-            .expect(200, {"authToken":expectedToken, payload: {user_id: SampleTestUser.user_id}})
+            .expect(200, {"authToken":expectedToken, user: {
+                username: SampleTestUser.username, 
+                user_id: SampleTestUser.user_id,
+                birthyear: parseInt(SampleTestUser.birthyear)
+            }})
         })
     })
 })

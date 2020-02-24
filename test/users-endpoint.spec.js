@@ -2,6 +2,8 @@ const knex = require('knex');
 const jwt = require('jsonwebtoken');
 const app = require('../src/app');
 const helpers = require('./test-helpers');
+const bcrypt = require('bcryptjs');
+const config = require('../src/config');
 
 describe('Users Endpoints', function() {
     let db 
@@ -21,7 +23,7 @@ describe('Users Endpoints', function() {
     before('cleanup', () => helpers.cleanTables(db))
     afterEach('cleanup', () => helpers.cleanTables(db))
 
-    describe(`POST /api/users`, () => {
+    describe(`api/users`, () => {
         beforeEach('insert users', () => {
             helpers.seedUsers(db, testUsers.usersArray)
         })
@@ -32,18 +34,30 @@ describe('Users Endpoints', function() {
             "password": "Password!1"
         }
 
-        it(`Happy path successfully adds new user`, () => {
+        const cleanHappyUser = helpers.serializeUser(happyUser) 
+
+        it(`Post Users Happy path successfully adds new user`, () => {
+            const expectedToken = jwt.sign(
+                {user_id: 1}, 
+                config.JWT_SECRET,
+                {
+                    subject: cleanHappyUser.username,
+                    expiresIn: config.JWT_EXPIRY,
+                    algorithm: 'HS256',
+                }
+            )
             return supertest(app).post('/api/users').send(happyUser)
             .expect(201,
-                {
-                    "user_id": 1,
-                    "birthyear": happyUser.birthyear,
-                    "username": happyUser.username
+                {"authToken":expectedToken, user: {
+                    username: happyUser.username, 
+                    user_id: 1,
+                    birthyear: parseInt(happyUser.birthyear)
                 }
+            }
                 )
         })
 
-        it('responds with user info', () => {
+        it('GET Users responds with user info', () => {
             return supertest(app)
             .get('/api/users')
             .expect(200)

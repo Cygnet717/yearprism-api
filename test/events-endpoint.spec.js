@@ -21,6 +21,8 @@ describe('Events Endpoints', function () {
     before('cleanup', () => helpers.cleanTables(db))
     afterEach('cleanup', () => helpers.cleanTables(db))
 
+    const authorizedUserToken = helpers.makeAuthHeader(oneTestUser)
+
     describe('GET /api/events', () => {
         beforeEach('insert users', () => {
             return db.into('yp_users').insert(testUsers.usersArray)
@@ -42,11 +44,6 @@ describe('Events Endpoints', function () {
             .expect(200, resEventArray )
         })
 
-
- 
-
-        const authorizedUserToken = helpers.makeAuthHeader(oneTestUser)
-
         it('should get array of all events and status 200', () => {
             
             return supertest(app)
@@ -60,6 +57,93 @@ describe('Events Endpoints', function () {
             return supertest(app)
             .get('/api/events')
             .expect(401)
+        })
+
+
+    })
+
+    describe(`POST /api/events`, () => {
+        beforeEach('insert users', () => {
+            return db.into('yp_users').insert(testUsers.usersArray)
+        }) 
+
+
+        it(`should insert new event`, () => {
+            const newEvent = {
+                user_id: 1,
+                eventdate: '2020-02-02T06:00:00.000Z',
+                eventname: 'new Event',
+                category: 'Achievements',
+                notes: 'new Notes'
+            }
+
+            return supertest(app)
+            .post('/api/events')
+            .send(newEvent)
+            .set('Authorization', authorizedUserToken)
+            .expect(201, {eventid: 1, ...newEvent})
+        })
+    })
+
+    describe(`PATCH /api/events`, () => {
+        beforeEach('insert users', () => {
+            return db.into('yp_users').insert(testUsers.usersArray)
+        }) 
+
+        beforeEach('insert events', () => {
+            return db.into('yp_events').insert(testUsers.eventsArray)
+        })
+
+        it('edits event data', () => {
+            const editedEvent = {
+                eventid: 1,
+                user_id: 1,
+                eventdate: "2020-02-02T06:00:00.000Z",
+                eventname: "edited Event Name",
+                category: "Achievements",
+                notes: "test Notes"
+            }
+            return supertest(app)
+            .patch('/api/events')
+            .send(editedEvent)
+            .set('Authorization', authorizedUserToken)
+            .expect(200, [{...editedEvent}])
+        })
+    })
+
+    describe(`DELETE /api/events:id`, () => {
+        beforeEach('insert users', () => {
+            return db.into('yp_users').insert(testUsers.usersArray)
+        }) 
+
+        beforeEach('insert events', () => {
+            return db.into('yp_events').insert(testUsers.eventsArray)
+        })
+
+        it(`delete event from database`, () => {
+            return supertest(app)
+            .delete('/api/events/1')
+            .set('Authorization', authorizedUserToken)
+            .expect(204)
+        })
+    })
+
+    describe(`get all events in a year`, () => {
+        beforeEach('insert users', () => {
+            return db.into('yp_users').insert(testUsers.usersArray)
+        }) 
+
+        beforeEach('insert events', () => {
+            return db.into('yp_events').insert(testUsers.eventsArray)
+        })
+
+        it('gets all events in 2020', () => {
+            const allYearEvents = testUsers.eventsArray;
+            allYearEvents[0].eventdate = '2020-02-02T06:00:00.000Z'
+            return supertest(app)
+            .get('/api/events/2020')
+            .set('Authorization', authorizedUserToken)
+            .expect(200, allYearEvents)
         })
     })
 })

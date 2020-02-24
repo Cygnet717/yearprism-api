@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const app = require('../src/app')
+const xss = require('xss');
 
 function makeUsersArray() {
     return [
@@ -72,6 +73,14 @@ function makeAuthHeader(user, secret = process.env.JWT_SECRET) {
     return `Bearer ${token}`
   }
 
+function serializeUser(user) {
+    return {
+        user_id: user.user_id,
+        birthyear: user.birthyear,
+        username: xss(user.username),
+    }
+}
+
 module.exports = {
     makeUsersArray,
     makeEventsArray,
@@ -79,5 +88,6 @@ module.exports = {
     cleanTables,
     seedUsers,
     makeAuthHeader,
-    checkUsers
+    checkUsers,
+    serializeUser
 }
