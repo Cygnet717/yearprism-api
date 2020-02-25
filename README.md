@@ -3,6 +3,8 @@ http://yearprism.herokuapp.com/
 
 
 ## Summary
+If you ever wonder what year or month you got your pet, bought a house or went on that wonderful vacation then YearPrism is for you!  Store all your major life events in this easy to use app.  Sort your events to see all the jobs you have had over the years or all of the work you have done on your house.  Make notes about each event to remember valuable information you might forget about 10 years from now.
+
 
 ## Technology Used
     JavaScript, React, PostgreSQL, HTML, and CSS
@@ -10,22 +12,32 @@ http://yearprism.herokuapp.com/
 ## Screenshots
 ### Landing Page
 ![Landing Page](/ScreenShots/Landing.png "Landing Page")
+
+### Mobile Landing Page
 ![Mobile Landing Page](/ScreenShots/LandingMobile.png "Mobile Landing Page")
 
 ### Home Page
 ![Home Page](/ScreenShots/Home.png "Home Page")
+
+### Mobile Home Page
 ![Mobile Home Page](/ScreenShots/HomeMobile.png "Mobile Home Page")
 
 ### Add Event Page
 ![Add Event Page](/ScreenShots/AddEvent.png "Add Event Page")
+
+### Mobile Add Event Page
 ![Mobile Add Event Page](/ScreenShots/AddEventMobile.png "Mobile Add Event Page")
 
 ### Year View Page
 ![Year View Page](/ScreenShots/YearView.png "Year View Page")
+
+### Mobile Year View Page
 ![Mobile Year View Page](/ScreenShots/YearViewMobile.png "Mobile Year View Page")
 
 ### Search Events Page
 ![Search Events Page](/ScreenShots/SearchView.png "Search Events Page")
+
+### Mobile Search Events Page
 ![Mobile Search Events Page](/ScreenShots/SearchViewMobile.png "Mobile Search Events Page")
 
 
@@ -221,51 +233,27 @@ Response
 
     [
         {
-            "command": "SELECT",
-            "rowCount": 1,
-            "oid": null,
-            "rows": [
-                {
-                    "eventid": 25,
-                    "user_id": 99,
-                    "eventdate": "2013-02-01T06:00:00.000Z",
-                    "eventname": "Shot with an arrow",
-                    "category": "Medical",
-                    "notes": "At least it convinced the inhabitants of Mintaka III that I an not a god."
-                },
-                {
-                    "eventid": 53,
-                    "user_id": 99,
-                    "eventdate": "2020-02-06T06:00:00.000Z",
-                    "eventname": "Borded the Enterprise",
-                    "category": "Job",
-                    "notes": ""
-                },
-                {
-                    "eventid": 54,
-                    "user_id": 99,
-                    "eventdate": "2020-02-06T06:00:00.000Z",
-                    "eventname": "Encountered the Borg",
-                    "category": "Achievement",
-                    "notes": "This should be fun"
-                }
-            ],
-            "fields": [
-                *ect..*
-               
-            ],
-            "_parsers": [
-                null,
-                null,
-            ],
-            "_types": {
-                "_types": {
-                    *ect..*
-                },
-                "text": {},
-                "binary": {}
-            },
-            "RowCtor": null,
-            "rowAsArray": false
+            "eventid": 25,
+            "user_id": 99,
+            "eventdate": "2013-02-01T06:00:00.000Z",
+            "eventname": "Shot with an arrow",
+            "category": "Medical",
+            "notes": "At least it convinced the inhabitants of Mintaka III that I an not a god."
+        },
+        {
+            "eventid": 53,
+            "user_id": 99,
+            "eventdate": "2020-02-06T06:00:00.000Z",
+            "eventname": "Borded the Enterprise",
+            "category": "Job",
+            "notes": ""
+        },
+        {
+            "eventid": 54,
+            "user_id": 99,
+            "eventdate": "2020-02-06T06:00:00.000Z",
+            "eventname": "Encountered the Borg",
+            "category": "Achievement",
+            "notes": "This should be fun"
         }
     ]
