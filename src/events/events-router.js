@@ -1,7 +1,5 @@
 const express = require('express');
-const path = require('path');
 const eventsService = require('./events-service');
-const cloudinary = require('cloudinary').v2;
 const { requireAuth } = require('../middleware/jwt-auth');
 
 const eventsRouter = express.Router();
@@ -82,7 +80,7 @@ eventsRouter
             res.status(200).json(edited)
         })
         .catch(error => console.log(error.message))
-        })
+    })
 
 eventsRouter
     .route('/:id')
