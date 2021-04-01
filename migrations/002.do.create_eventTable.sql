@@ -10,3 +10,4 @@ CREATE TABLE YP_events (
     category cat NOT NULL,
     notes TEXT
 );
+END
